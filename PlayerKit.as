@@ -16,6 +16,7 @@ package
 	import flash.utils.Timer;
 	import flash.utils.setTimeout;
 	
+	import org.osmf.events.MediaPlayerStateChangeEvent;
 	import org.osmf.media.MediaFactory;
 	import org.osmf.media.MediaPlayerSprite;
 	import org.osmf.media.PluginInfoResource;
@@ -29,6 +30,7 @@ package
 		private var mps:MediaPlayerSprite;
 		private var toolbar:SmgbbPlayPanel;
 		private var callback:Function;
+		private var islive:Boolean;
 		public function PlayerKit()
 		{
 			Security.allowDomain("*");
@@ -47,14 +49,16 @@ package
 			init();
 		}
 		private function init():void{
-			config = new Config();
+			config = Config.instance;
 			config.Rect.x = 0;
 			config.Rect.y = 0;
 			config.Rect.width = stage.stageWidth;
 			config.Rect.height = stage.stageHeight;
+			log("width:"+config.Rect.width+"   height:"+config.Rect.height);
 			factory = new MediaFactory();
 			factory.loadPlugin(new PluginInfoResource(new HLSPluginInfo()));
 			mps=new MediaPlayerSprite();
+			mps.mediaPlayer.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onStateChange);
 			toolbar = new SmgbbPlayPanel();
 			this.setStageAlign();
 			this.changeElementSize();
@@ -62,44 +66,37 @@ package
 			this.addChild(toolbar);
 			
 			var timer:Timer = new Timer(500);
-			timer.addEventListener(TimerEvent.TIMER,onTimer);
+			timer.addEventListener(TimerEvent.TIMER,onFrame);
 			timer.start();
 			
-			flash.utils.setTimeout(tt,1000);
+//			flash.utils.setTimeout(tt,1000);
+		}
+		private function onStateChange(evt:MediaPlayerStateChangeEvent):void{
+			if(callback){
+				callback(evt.state);
+			}
+		}
+		override public function set width(param:Number) : void
+		{
+			config.Rect.width = param;
+			changeElementSize();
+		}
+		override public function set height(param:Number) : void
+		{
+			config.Rect.height = param;
+			changeElementSize();
 		}
 		
-		private function onTimer(evt:TimerEvent):void{
-			if(mps.mediaPlayer.playing){
-				toolbar.posTime.text = formatTime(mps.mediaPlayer.currentTime);
+		private function onFrame(evt:TimerEvent):void{
+			if(islive==false){
+				if(mps.mediaPlayer.playing){
+					toolbar.updateTime(mps.mediaPlayer.currentTime);
+				}
 			}
 		}
-		private function formatTime(value:int):String{
-			var sec:int=0;
-			var min:int=0;
-			var hrs:int=0;
-			var strSec:String;
-			var strMin:String;
-			var strHrs:String;
-			if(value<60){
-				sec = value;
-			}else if(value<3600){
-				min = value/60;
-				sec = value - min*60;
-			}else {
-				hrs = value/3600;
-				min = (value - hrs*3600)/60;
-				sec = value - hrs*3600 - min*60;
-			}
-			if(sec<10)strSec="0"+sec.toString();
-			else strSec=sec.toString();
-			if(min<10)strMin="0"+min.toString();
-			else strMin=min.toString();
-			if(hrs<10)strHrs="0"+hrs.toString();
-			else strHrs=hrs.toString();
-			return strHrs+":"+strMin+":"+strSec;
-		}
+		
 		private function tt():void{
-			this.sendUICommand(SmgbbCommand.UI_COMMAND_PLAY,{url:"http://segment.livehls.kksmg.com/m3u8/216_1406569020.m3u8",duration:"00:15:00"});
+			this.sendUICommand(SmgbbCommand.UI_COMMAND_PLAY,{url:"http://lms.smgtech.net/recorded/1/0729/1620/playlist.m3u8",duration:"900",islive:"true"});
 		}
 		private function stageResized(evt:Event):void{
 			log("stageResized");
@@ -110,7 +107,7 @@ package
 			this.changeElementSize();
 		}
 		private function changeElementSize():void{
-			log("changeElementSize:"+config.Rect.width);
+//			log("changeElementSize:"+config.Rect.width);
 			mps.width = config.Rect.width;
 			mps.height = config.Rect.height-16;
 			toolbar.y = config.Rect.height-16;
@@ -153,9 +150,17 @@ package
 				}
 				case SmgbbCommand.UI_COMMAND_PLAY:
 				{
+					log("try to play:"+param.url);
 					var url:String = param.url;
 					mps.media = factory.createMediaElement(new URLResource(url));
-					toolbar.duration.text = param.duration;
+					if(param.islive=="true"){
+						islive=true;
+						toolbar.setDuration(-1);
+					}
+					else{
+						islive=false;
+						toolbar.setDuration(param.duration);
+					}
 					break;
 				}
 				case SmgbbCommand.UI_COMMAND_GET_PLAYINGTIME:
