@@ -34,6 +34,7 @@
 			}
 		}
 		public function updateTime(currentTime:Number):void{
+			if(currentTime>durationTime)currentTime = durationTime;
 			posTime.text = formatTime(currentTime);
 			timeBar.playedLine.width = currentTime / durationTime * 443.0;
 			timeBar.seekSuite.x = timeBar.playedLine.width;

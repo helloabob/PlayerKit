@@ -108,6 +108,10 @@ package
 		}
 		private function changeElementSize():void{
 //			log("changeElementSize:"+config.Rect.width);
+			graphics.clear();
+			graphics.beginFill(0x000000,1);
+			graphics.drawRect(config.Rect.x,config.Rect.y,config.Rect.width,config.Rect.height);
+			graphics.endFill();
 			mps.width = config.Rect.width;
 			mps.height = config.Rect.height-16;
 			toolbar.y = config.Rect.height-16;
