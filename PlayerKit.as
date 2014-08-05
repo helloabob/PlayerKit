@@ -19,6 +19,7 @@ package
 	import org.osmf.events.MediaPlayerStateChangeEvent;
 	import org.osmf.media.MediaFactory;
 	import org.osmf.media.MediaPlayerSprite;
+	import org.osmf.media.MediaPlayerState;
 	import org.osmf.media.PluginInfoResource;
 	import org.osmf.media.URLResource;
 	import org.osmf.net.httpstreaming.hls.HLSPluginInfo;
@@ -31,6 +32,7 @@ package
 		private var toolbar:SmgbbPlayPanel;
 		private var callback:Function;
 		private var islive:Boolean;
+		private var bufferPanel:BufferPanel;
 		public function PlayerKit()
 		{
 			Security.allowDomain("*");
@@ -60,10 +62,13 @@ package
 			mps=new MediaPlayerSprite();
 			mps.mediaPlayer.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onStateChange);
 			toolbar = new SmgbbPlayPanel();
+			bufferPanel = new BufferPanel();
+			bufferPanel.visible = false;
 			this.setStageAlign();
 			this.changeElementSize();
 			this.addChild(mps);
 			this.addChild(toolbar);
+			this.addChild(bufferPanel);
 			
 			var timer:Timer = new Timer(500);
 			timer.addEventListener(TimerEvent.TIMER,onFrame);
@@ -72,6 +77,11 @@ package
 //			flash.utils.setTimeout(tt,1000);
 		}
 		private function onStateChange(evt:MediaPlayerStateChangeEvent):void{
+			if(evt.state == MediaPlayerState.PLAYING){
+				bufferPanel.visible = false;
+			}else{
+				bufferPanel.visible = true;
+			}
 			if(callback){
 				callback(evt.state);
 			}
@@ -116,6 +126,8 @@ package
 			mps.height = config.Rect.height-16;
 			toolbar.y = config.Rect.height-16;
 			toolbar.width = config.Rect.width;
+			bufferPanel.x = config.Rect.width/2 - bufferPanel.width/2 + 10;
+			bufferPanel.y = config.Rect.height/2 - bufferPanel.height/2 + 10;
 		}
 		private function log(str:String):void{
 			trace(str);
