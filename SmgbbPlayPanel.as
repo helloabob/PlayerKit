@@ -22,8 +22,23 @@
 			timeBar.playedLine.width = 0;
 			timeBar.seekSuite.x = 0;
 			timeBar.bufferingLine.width = 0;
+			
+			timeBar.startpt.visible=false;
+			timeBar.endpt.visible=false;
 			return;
         }// end function
+		public function setCutPoint(time:Number,type:int):void{
+			if(type==1){
+				timeBar.startpt.x = time/durationTime * 443.0;
+				timeBar.startpt.visible=true;
+			}else if(type==2){
+				timeBar.endpt.x = time/durationTime * 443.0;
+				timeBar.endpt.visible=true;
+			}else{
+				timeBar.startpt.visible=false;
+				timeBar.endpt.visible=false;
+			}
+		}
 		public function setDuration(total:Number):void{
 			if(total >= 0){
 				durationTime = total;

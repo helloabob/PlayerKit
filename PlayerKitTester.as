@@ -27,7 +27,14 @@ package
 			obj.url="http://pl.youku.com/playlist/m3u8?ts=1418819698&keyframe=0&vid=XODI1NjEzMzg4&type=flv&ep=dCaVEkGMX8gJ7Svfiz8bbyngcXJcXJZ1gmaE%2F4gXSsZuH%2BzQnj3Qwg%3D%3D&sid=64188196988031285255c&token=7315&ctype=12&ev=1&oip=2059647531";
 			obj.duration=135;
 			obj.islive="false";
+			tviecore.sendUICommand("UI_COMMAND_REGISTER_PLAYER_STATE", onCallback);
 			tviecore.sendUICommand("UI_COMMAND_PLAY",obj);
+			
+			
+//			tviecore.sendUICommand("UI_COMMAND_RESUME");
+		}
+		private function onCallback(state:String):void{
+			trace("state:"+state);
 		}
 	}
 }
