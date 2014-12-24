@@ -17,7 +17,7 @@ package
 			btnStart.addEventListener(MouseEvent.CLICK, onStart);
 			btnStart.tabIndex = 1;
 			
-			btnEnd = drawButton("设置结束点",0xffff00);
+			btnEnd = drawButton("设置结束点",0xFF6100);
 			btnEnd.y = 40;
 			addChild(btnEnd);
 			btnEnd.addEventListener(MouseEvent.CLICK, onStart);

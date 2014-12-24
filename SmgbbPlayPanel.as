@@ -28,6 +28,7 @@
 			return;
         }// end function
 		public function setCutPoint(time:Number,type:int):void{
+			return;
 			if(type==1){
 				timeBar.startpt.x = time/durationTime * 443.0;
 				timeBar.startpt.visible=true;
