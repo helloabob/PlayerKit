@@ -1,7 +1,10 @@
 ﻿package
 {
     import flash.display.MovieClip;
+    import flash.display.Sprite;
     import flash.events.Event;
+    import flash.events.MouseEvent;
+    import flash.geom.Rectangle;
     import flash.text.TextField;
 
 	/**
@@ -15,6 +18,10 @@
         public var timeBar:MovieClip;
 		public var durationTime:Number;
 
+		private var spSeek:Sprite;
+		private var canUpdateSeek:Boolean;
+		public var seekFunc:Function;
+		
         public function SmgbbPlayPanel()
         {
 //			posTime.text = "10:00:01";
@@ -25,8 +32,27 @@
 			
 			timeBar.startpt.visible=false;
 			timeBar.endpt.visible=false;
+			
+			spSeek = timeBar.seekSuite;
+			canUpdateSeek = true;
+			enableControl();
+			
 			return;
         }// end function
+		private function enableControl():void{
+			spSeek.addEventListener(MouseEvent.MOUSE_DOWN,onDown);
+		}
+		private function onDown(evt:MouseEvent):void{
+			spSeek.addEventListener(MouseEvent.MOUSE_UP,onUp);
+			spSeek.startDrag(false,new Rectangle(0,3.35,timeBar.timeLine.width,0));
+			canUpdateSeek = false;
+		}
+		private function onUp(evt:MouseEvent):void{
+			spSeek.removeEventListener(MouseEvent.MOUSE_UP,onUp);
+			spSeek.stopDrag();
+			seekFunc.apply(null,[spSeek.x/443.0]);
+			canUpdateSeek = true;
+		}
 		public function setCutPoint(time:Number,type:int):void{
 			return;
 			if(type==1){
@@ -50,6 +76,7 @@
 			}
 		}
 		public function updateTime(currentTime:Number):void{
+			if(canUpdateSeek==false)return;
 			if(currentTime>durationTime)currentTime = durationTime;
 			posTime.text = formatTime(currentTime);
 			timeBar.playedLine.width = currentTime / durationTime * 443.0;
