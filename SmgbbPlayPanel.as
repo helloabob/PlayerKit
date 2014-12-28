@@ -20,7 +20,8 @@
 
 		private var spSeek:Sprite;
 		private var canUpdateSeek:Boolean;
-		public var seekFunc:Function;
+		public var seekFunc:Function=null;
+		private var spLine:Sprite;
 		
         public function SmgbbPlayPanel()
         {
@@ -30,10 +31,11 @@
 			timeBar.seekSuite.x = 0;
 			timeBar.bufferingLine.width = 0;
 			
-			timeBar.startpt.visible=false;
-			timeBar.endpt.visible=false;
+//			timeBar.startpt.visible=false;
+//			timeBar.endpt.visible=false;
 			
 			spSeek = timeBar.seekSuite;
+			spLine = timeBar.seekLine;
 			canUpdateSeek = true;
 			enableControl();
 			
@@ -41,6 +43,7 @@
         }// end function
 		private function enableControl():void{
 			spSeek.addEventListener(MouseEvent.MOUSE_DOWN,onDown);
+			spLine.addEventListener(MouseEvent.CLICK, onSeek);
 		}
 		private function onDown(evt:MouseEvent):void{
 			spSeek.addEventListener(MouseEvent.MOUSE_UP,onUp);
@@ -50,8 +53,12 @@
 		private function onUp(evt:MouseEvent):void{
 			spSeek.removeEventListener(MouseEvent.MOUSE_UP,onUp);
 			spSeek.stopDrag();
-			seekFunc.apply(null,[spSeek.x/443.0]);
+			if(seekFunc!=null)seekFunc.apply(null,[spSeek.x/443.0]);
 			canUpdateSeek = true;
+		}
+		private function onSeek(evt:MouseEvent):void{
+			if(seekFunc!=null)seekFunc.apply(null,[evt.localX/443.0]);
+			trace(evt.localX);
 		}
 		public function setCutPoint(time:Number,type:int):void{
 			return;
@@ -74,6 +81,8 @@
 				duration.text = "--:--:--";
 				posTime.text = "--:--:--";
 			}
+			timeBar.playedLine.width=0;
+			timeBar.seekSuite.x=0;
 		}
 		public function updateTime(currentTime:Number):void{
 			if(canUpdateSeek==false)return;
