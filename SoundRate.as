@@ -28,7 +28,7 @@ package
 			}
 			if(conWidth<=0||conHeight<=0)return;
 			var offsetY:int = conHeight/2;
-			var count:int = 256;
+			var count:int = 50;
 			var thick:int = conWidth/count;
 			n = 0;
 //			//清除绘图
@@ -52,7 +52,12 @@ package
 			
 			/*case 2*/
 			
-			SoundMixer.computeSpectrum(bArray,false,0);
+//			SoundMixer.computeSpectrum(bArray,false,0);
+			
+			var arr:Array = new Array();
+			for(var j:int;j<count;j++){
+				arr[j]=Math.random()*2-1;
+			}
 			
 			var g:Graphics = this.graphics;
 			g.clear();
@@ -71,26 +76,25 @@ package
 			// left channel
 			for (var i:int = 0; i < count; i++) 
 			{
-				n = (bArray.readFloat() * offsetY);
-				log("hei1_:"+i+" value:"+n);
+				n = (arr[i] * offsetY);
 				g.lineTo(i * thick, offsetY - n);
 			}
-			g.lineTo(count * thick, offsetY);
+			g.lineTo(conWidth, offsetY);
 			g.endFill();
 			
 			// right channel
-			g.lineStyle(0, 0xCC0066);
-			g.beginFill(0xCC0066, 0.5);
-			g.moveTo(count * thick, offsetY);
-			
-			for (i = count; i > 0; i--) 
-			{
-				n = (bArray.readFloat() * offsetY);
-				log("hei2_:"+i+" value:"+n);
-				g.lineTo(i * thick, offsetY - n);
-			}
-			g.lineTo(0, offsetY);
-			g.endFill();
+//			g.lineStyle(0, 0xCC0066);
+//			g.beginFill(0xCC0066, 0.5);
+//			g.moveTo(count * thick, offsetY);
+//			
+//			for (i = count; i > 0; i--) 
+//			{
+//				n = (bArray.readFloat() * offsetY);
+//				log("hei2_:"+i+" value:"+n);
+//				g.lineTo(i * thick, offsetY - n);
+//			}
+//			g.lineTo(0, offsetY);
+//			g.endFill();
 		}
 		private function log(str:String):void{
 			trace(str);
