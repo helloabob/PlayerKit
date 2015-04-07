@@ -17,7 +17,7 @@ package
 			btnStart = drawButton("设置开始点",0x0000ff,40);
 			addChild(btnStart);
 			btnStart.addEventListener(MouseEvent.CLICK, onStart);
-			btnStart.tabIndex = 1;
+			btnStart.tabIndex = CutUtils.TypeStart;
 			
 			var tf:TextFormat = new TextFormat();
 			tf.align = TextFormatAlign.CENTER;
@@ -36,7 +36,7 @@ package
 			btnEnd.y = 50;
 			addChild(btnEnd);
 			btnEnd.addEventListener(MouseEvent.CLICK, onStart);
-			btnEnd.tabIndex = 2;
+			btnEnd.tabIndex = CutUtils.TypeEnd;
 			
 			lblEnd = new TextField();
 			lblEnd.y = 25;

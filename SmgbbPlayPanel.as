@@ -2,7 +2,6 @@
 {
     import flash.display.MovieClip;
     import flash.display.Sprite;
-    import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.geom.Rectangle;
     import flash.text.TextField;
@@ -18,9 +17,12 @@
         public var timeBar:MovieClip;
 		public var durationTime:Number;
 
+		/*拖拉的圆点*/
 		private var spSeek:Sprite;
 		private var canUpdateSeek:Boolean;
 		public var seekFunc:Function=null;
+		
+		/*进度条，支持拖拉跳播*/
 		private var spLine:Sprite;
 		
         public function SmgbbPlayPanel()
@@ -62,10 +64,10 @@
 		}
 		public function setCutPoint(time:Number,type:int):void{
 			return;
-			if(type==1){
+			if(type==CutUtils.TypeStart){
 				timeBar.startpt.x = time/durationTime * 443.0;
 				timeBar.startpt.visible=true;
-			}else if(type==2){
+			}else if(type==CutUtils.TypeEnd){
 				timeBar.endpt.x = time/durationTime * 443.0;
 				timeBar.endpt.visible=true;
 			}else{
