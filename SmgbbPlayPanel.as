@@ -17,6 +17,9 @@
         public var timeBar:MovieClip;
 		public var durationTime:Number;
 
+		/*分段视频显示层*/
+		private var spCut:Sprite;
+		
 		/*拖拉的圆点*/
 		private var spSeek:Sprite;
 		private var canUpdateSeek:Boolean;
@@ -38,6 +41,8 @@
 			
 			spSeek = timeBar.seekSuite;
 			spLine = timeBar.seekLine;
+			spCut = timeBar.cutLine;
+			spCut.width = 0;
 			canUpdateSeek = true;
 			enableControl();
 			
@@ -63,16 +68,21 @@
 			trace(evt.localX);
 		}
 		public function setCutPoint(time:Number,type:int):void{
-			return;
+//			return;
 			if(type==CutUtils.TypeStart){
-				timeBar.startpt.x = time/durationTime * 443.0;
-				timeBar.startpt.visible=true;
+//				timeBar.startpt.x = time/durationTime * 443.0;
+//				timeBar.startpt.visible=true;
+				spCut.x = time/durationTime * 443.0+1;
 			}else if(type==CutUtils.TypeEnd){
-				timeBar.endpt.x = time/durationTime * 443.0;
-				timeBar.endpt.visible=true;
+//				timeBar.endpt.x = time/durationTime * 443.0;
+//				timeBar.endpt.visible=true;
+				var end_time:Number = time/durationTime * 443.0 + 1;
+				if(end_time>spCut.x)spCut.width = end_time - spCut.x;
 			}else{
-				timeBar.startpt.visible=false;
-				timeBar.endpt.visible=false;
+				spCut.x = 0;
+				spCut.width = 0;
+//				timeBar.startpt.visible=false;
+//				timeBar.endpt.visible=false;
 			}
 		}
 		public function setDuration(total:Number):void{
