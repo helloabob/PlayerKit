@@ -39,6 +39,11 @@ package
 		}
 		
 		/**
+		 * 打点开关
+		 */
+		public static var cutOpen:Boolean = false;
+		
+		/**
 		 * 开始时间
 		 */
 		public static var startTime:Number = 0;

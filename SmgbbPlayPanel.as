@@ -70,19 +70,17 @@
 		public function setCutPoint(time:Number,type:int):void{
 //			return;
 			if(type==CutUtils.TypeStart){
-//				timeBar.startpt.x = time/durationTime * 443.0;
-//				timeBar.startpt.visible=true;
-				spCut.x = time/durationTime * 443.0+1;
+				CutUtils.cutOpen = true;
+				spCut.x = time/durationTime * 443.0 + 1;
+				spCut.width = 0;
 			}else if(type==CutUtils.TypeEnd){
-//				timeBar.endpt.x = time/durationTime * 443.0;
-//				timeBar.endpt.visible=true;
+				CutUtils.cutOpen = false;
 				var end_time:Number = time/durationTime * 443.0 + 1;
 				if(end_time>spCut.x)spCut.width = end_time - spCut.x;
 			}else{
 				spCut.x = 0;
 				spCut.width = 0;
-//				timeBar.startpt.visible=false;
-//				timeBar.endpt.visible=false;
+				CutUtils.cutOpen = false;
 			}
 		}
 		public function setDuration(total:Number):void{
@@ -102,6 +100,12 @@
 			posTime.text = formatTime(currentTime);
 			timeBar.playedLine.width = currentTime / durationTime * 443.0;
 			timeBar.seekSuite.x = timeBar.playedLine.width;
+			
+			/*刷新打点进度条*/
+			if(CutUtils.cutOpen){
+				var end_time:Number = currentTime/durationTime * 443.0 + 1;
+				if(end_time>spCut.x)spCut.width = end_time - spCut.x;
+			}
 		}
 		private function formatTime(value:int):String{
 			var sec:int=0;
