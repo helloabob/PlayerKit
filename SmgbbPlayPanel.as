@@ -41,8 +41,11 @@
 			
 			spSeek = timeBar.seekSuite;
 			spLine = timeBar.seekLine;
-			spCut = timeBar.cutLine;
-			spCut.width = 0;
+			try{
+				spCut = timeBar.cutLine;
+				spCut.width = 0;
+			}catch(e:Error){
+			}
 			canUpdateSeek = true;
 			enableControl();
 			
@@ -91,6 +94,17 @@
 				duration.text = "--:--:--";
 				posTime.text = "--:--:--";
 			}
+			timeBar.playedLine.width=0;
+			timeBar.seekSuite.x=0;
+		}
+		/**
+		 * 设置时间轴开始结束时间
+		 * @param starttime 开始时间
+		 * @param endtime 结束时间
+		 */
+		public function setTimeLabel(starttime:String, endtime:String):void{
+			duration.text = endtime;
+			posTime.text = starttime;
 			timeBar.playedLine.width=0;
 			timeBar.seekSuite.x=0;
 		}
