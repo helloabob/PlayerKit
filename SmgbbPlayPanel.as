@@ -28,6 +28,12 @@
 		/*进度条，支持拖拉跳播*/
 		private var spLine:Sprite;
 		
+		/*是否点播*/
+		public var isvod:Boolean=false;
+		
+		/*点播视频开始时间偏移量*/
+		private var posTimeOffset:int = 0;
+		
         public function SmgbbPlayPanel()
         {
 //			posTime.text = "10:00:01";
@@ -89,13 +95,25 @@
 		public function setDuration(total:Number):void{
 			if(total >= 0){
 				durationTime = total;
-				duration.text = formatTime(total);
+//				duration.text = formatTime(total);
 			}else{
 				duration.text = "--:--:--";
 				posTime.text = "--:--:--";
 			}
 			timeBar.playedLine.width=0;
 			timeBar.seekSuite.x=0;
+		}
+		
+		/*更新点播视频时间偏移量*/
+		private function updatePosTimeOffset(value:String):void{
+			var arr:Array = value.split(":");
+			if(arr.length!=3)posTimeOffset = 0;
+			else {
+				var hrs:int = arr[0];
+				var min:int = arr[1];
+				var sec:int = arr[2];
+				posTimeOffset = hrs*3600+min*60+sec;
+			}
 		}
 		/**
 		 * 设置时间轴开始结束时间
@@ -107,11 +125,12 @@
 			posTime.text = starttime;
 			timeBar.playedLine.width=0;
 			timeBar.seekSuite.x=0;
+			if(isvod)updatePosTimeOffset(starttime);
 		}
 		public function updateTime(currentTime:Number):void{
 			if(canUpdateSeek==false)return;
 			if(currentTime>durationTime)currentTime = durationTime;
-			posTime.text = formatTime(currentTime);
+			posTime.text = formatTime(currentTime+posTimeOffset);
 			timeBar.playedLine.width = currentTime / durationTime * 443.0;
 			timeBar.seekSuite.x = timeBar.playedLine.width;
 			
