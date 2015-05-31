@@ -22,7 +22,7 @@ package
 		{
 			super();
 		}
-		public function showBar():void{
+		public function showBar(imageUrl:String=""):void{
 //			return;
 			if(SoundMixer.areSoundsInaccessible()==true){
 				log("sound access error");
@@ -104,7 +104,7 @@ package
 			loop_count++;
 			if(loop_count==39)loop_count=0;
 		}
-		private function log(str:String):void{
+		protected function log(str:String):void{
 			trace(str);
 			if(flash.external.ExternalInterface.available)flash.external.ExternalInterface.call("console.log",str);
 		}
